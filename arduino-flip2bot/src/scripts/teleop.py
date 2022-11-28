@@ -1,15 +1,11 @@
 #! usr/bin/env python3
-
-# backward-------endkey
-#left-----------insert key
-#right----------page_up key
-#angular_left---delete key
-#angular_right--page_down
+import rospy
 
 import paho.mqtt.client as mqttClient
 import time
 from pynput import keyboard
 import json
+import os
 
 def on_connect(client, userdata, flags, rc):
  
@@ -25,7 +21,7 @@ def on_connect(client, userdata, flags, rc):
  
 Connected = False   #global variable for the state of the connection
  
-broker_address= "192.168.1.100"
+broker_address= "192.168.1.102"
 
 # broker_address= "192.168.0.116"
 # broker_address= "192.168.0.163"
@@ -40,21 +36,17 @@ client.connect(broker_address, port=port)          #connect to broker
 client.loop_start()        #start the loop
  
 
+
 def on_press(key):
     try:
         # MQTT_MSG=json.dumps({"pwm1": "0","pwm2":  "0","pwm3": "0","pwm4":  "0"})
         if key == key.end:
             MQTT_MSG=json.dumps({"linear_x":"1"})
-            print("Backward") 
-        if key == key.delete:
-            MQTT_MSG=json.dumps({"angular":"1","linear_y":  "1"})
+            print("Backward")         
         if key == key.page_down:
-            MQTT_MSG=json.dumps({"angular":"-1","linear_y":  "1"})
-        
-        if key == key.page_up:
             MQTT_MSG=json.dumps({"linear_y":"1"})
             print("Left")
-        if key == key.insert:
+        if key == key.delete:
             MQTT_MSG=json.dumps({"linear_y": "-1"})
             print("right")
         if key == key.home:
@@ -67,8 +59,8 @@ def on_press(key):
             MQTT_MSG=json.dumps({"servo":"-1"})
             print("left turn")
         if key == key.ctrl:
-            MQTT_MSG=json.dumps({"colorRequest":"1"})
-            print("Servo")
+            MQTT_MSG=json.dumps({"brake":"1"})
+            print("idle")
         else:
             print("False")
             
@@ -92,6 +84,7 @@ with keyboard.Listener(
 
 while Connected != True:    #Wait for connection
     time.sleep(0.1)
+
  
 try:
     while True:
