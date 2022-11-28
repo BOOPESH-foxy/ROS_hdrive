@@ -9,6 +9,14 @@ void setup()
 
   servo.attach(15); //D4
   servo.write(90);
+  pinMode(32, OUTPUT);
+  pinMode(33,OUTPUT);
+  pinMode(25, OUTPUT);
+  pinMode(26,OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13,OUTPUT);
+  pinMode(22, OUTPUT);
+  pinMode(23,OUTPUT);
 
   // Serial.begin(115200);
 
@@ -25,83 +33,55 @@ void callback(char *topic, byte *message, unsigned int length)
   int linear_x = doc["linear_x"];
   int linear_y = doc["linear_y"];
   int servo_data = doc["servo"];
-  // int cube = doc["colorRequest"];
+  int brake_data = doc["brake"];
 
-  // if (cube == 1)
-  // {
-  //   int colordata = color();
-  //   Serial.println(colordata);
-  //   if (colordata != 0)
-  //   {
-  //     String returnString = String(colordata);
-  //     char destination[10];
-  //     returnString.toCharArray(destination, 10);
-  //     client.publish(destination_topic, destination);
-  //   }
-  // }
+
   //Linear pulse
 
-  if (linear_x == 2)
+  if (brake_data == 1)
   {
-    ledcWrite(ledChannel, 0);
-    ledcWrite(ledChannel1, lineargoalPwm);
-
-    ledcWrite(ledChannel2, 0);
-    ledcWrite(ledChannel3, lineargoalPwm);
-
-    ledcWrite(ledChannel4, 0);
-    ledcWrite(ledChannel5, 0);
-
-    ledcWrite(ledChannel6, 0);
-    ledcWrite(ledChannel7, 0);
+    digitalWrite(33,LOW);
+    digitalWrite(32,LOW);    
+    digitalWrite(25,LOW);
+    digitalWrite(26,LOW); 
+    digitalWrite(12,LOW);
+    digitalWrite(13,LOW);
+    digitalWrite(18,LOW);
+    digitalWrite(19,LOW);
+  }
+  if (linear_x == 1)
+  {
+    digitalWrite(33,LOW);
+    digitalWrite(32,HIGH);    
+    digitalWrite(27,LOW);
+    digitalWrite(26,HIGH);
     return;
   }
 
-  if (linear_x == -2)
+  if (linear_x == -1)
   {
-    ledcWrite(ledChannel, lineargoalPwm);
-    ledcWrite(ledChannel1, 0);
-
-    ledcWrite(ledChannel2, lineargoalPwm);
-    ledcWrite(ledChannel3, 0);
-
-    ledcWrite(ledChannel4, 0);
-    ledcWrite(ledChannel5, 0);
-
-    ledcWrite(ledChannel6, 0);
-    ledcWrite(ledChannel7, 0);
+    digitalWrite(32,LOW);
+    digitalWrite(33,HIGH);    
+    digitalWrite(26,LOW);
+    digitalWrite(27,HIGH);
     return;
   }
 
-  if (linear_y == 2)
+  if (linear_y == 1)
   {
-    ledcWrite(ledChannel, 0);
-    ledcWrite(ledChannel1, 0);
-
-    ledcWrite(ledChannel2, 0);
-    ledcWrite(ledChannel3, 0);
-
-    ledcWrite(ledChannel4, lineargoalPwm);
-    ledcWrite(ledChannel5, 0);
-
-    ledcWrite(ledChannel6, lineargoalPwm);
-    ledcWrite(ledChannel7, 0);
+    digitalWrite(12,HIGH);
+    digitalWrite(13,LOW);
+    digitalWrite(18,HIGH);
+    digitalWrite(19,LOW);
     return;
   }
 
-  if (linear_y == -2)
+  if (linear_y == -1)
   {
-    ledcWrite(ledChannel, 0);
-    ledcWrite(ledChannel1, 0);
-
-    ledcWrite(ledChannel2, 0);
-    ledcWrite(ledChannel3, 0);
-
-    ledcWrite(ledChannel4, 0);
-    ledcWrite(ledChannel5, lineargoalPwm);
-
-    ledcWrite(ledChannel6, 0);
-    ledcWrite(ledChannel7, lineargoalPwm);
+    digitalWrite(12,LOW);
+    digitalWrite(13,HIGH);    
+    digitalWrite(18,LOW);
+    digitalWrite(19,HIGH);
     return;
   }
 
@@ -110,8 +90,7 @@ void callback(char *topic, byte *message, unsigned int length)
   if (angular == 1)
   {
     if (abs(linear_y) != 0)
-    {
-      //TODO BOT 3
+    {     //TODO BOT 3
       ledcWrite(ledChannel, 0);
       ledcWrite(ledChannel1, angularPwm);
       ledcWrite(ledChannel2, angularPwm);
